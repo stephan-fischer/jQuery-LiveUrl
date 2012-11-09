@@ -1,0 +1,90 @@
+/* Live URL */
+
+.liveurl {
+    width: 100%;
+    overflow: hidden;
+    background: #F3F3F3;
+    border-top: 1px dashed #CCC;
+    margin-top: 10px;
+    display: none;
+    
+}
+
+.liveurl .inner {
+    margin: 15px;
+
+    overflow: hidden;
+}
+
+.liveurl span.image {
+    float: left;
+    clear: none;
+}
+
+.liveurl .details {
+    float: left;
+    overflow: hidden;
+    width: 475px;
+}
+
+.liveurl span {
+    float: left;
+    clear: both;
+    line-height: 13px;
+}
+
+
+.liveurl .title {
+    font-weight: bold;
+}
+
+.liveurl .url {
+    font-size: 11px;
+    font-weight: normal;
+    color: #666;
+}
+
+.liveurl img {
+    width: 100px;
+     margin: 0 10px 10px 0;
+}
+
+.liveurl .close {
+    float: right;
+    cursor: pointer;
+    margin: 5px;
+    text-indent:-999px;
+    width: 16px;
+    height: 16px;
+    background:url(close.gif);
+}
+
+.liveurl .thumbnail {
+    float: left;
+    margin: 15px 0 0 0;
+    clear: both;
+    display: none;
+}
+
+.liveurl .thumbnail  label {
+    padding: 0 0 0 5px;
+    vertical-align: text-top;
+}
+
+.post textarea {
+    width: 600px;
+    height: 140px;
+}
+
+.liveurl-loader {
+    display: none;
+    width: 16px;
+    height: 11px;
+    margin: 10px 0;
+    background: url(url-loader.gif);
+    
+}
+
+.liveurl * {
+    font: 12px/1em Tahoma, Arial, Helvetica, Segoe, sans-serif;
+}
