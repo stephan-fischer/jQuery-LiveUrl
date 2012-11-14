@@ -1,7 +1,7 @@
 # jquery.liveurl
 
 This plugin enables a **live preview** for an url in a *textarea*,
-like the facebook attachement<br/> of a post.
+like the facebook attachement<br/> of a post. Multiple images and a video preview is in this demo integrated.
 
 ## Installation
 
