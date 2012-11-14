@@ -4,44 +4,49 @@
 
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
         <meta name="description" content="" />
         <meta name="author" content="Stephan Fischer" />
-        
-        
         <title>Live Url</title>
-
         <link rel="stylesheet" href="liveurl.css" />
     </head>
     <body>
           
-        <textarea style="width: 300px; height: 100px;" placeholder="write here"> </textarea>
-        <div class="liveurl-loader"> </div>
+        <textarea style="width: 300px; height: 100px;" placeholder="write here"></textarea>
+        <div class="liveurl-loader"></div>
         
         <div class="liveurl">
             <div class="close" title="Entfernen"></div>
             <div class="inner">
-                <span class="image"> </span>
+                <div class="image"> </div>
                 <div class="details">
-                    <span class="title"> </span>
-                    <span class="description"> </span> 
-                    <span class="url"> </span>
-                    
-                    <div class="thumbnail">
-                        <input type="checkbox" name="no_picture" id="un6qfpc1">
-                        <label for="un6qfpc1">Kein Miniaturbild</label>
+                    <div class="info">
+                        <div class="title"> </div>
+                        <div class="description"> </div> 
+                        <div class="url"> </div>
                     </div>
-                   
+
+                    <div class="thumbnail">
+                        <div class="pictures">
+                            <div class="controls">
+                                <div class="prev button inactive"></div>
+                                <div class="next button inactive"></div>
+                                <div class="count">
+                                    <span class="current">0</span><span> von </span><span class="max">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video"></div>
                 </div>
-                <div class="video">
-                    
-                </div>
+
             </div>
         </div>
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" > </script>
             <script src="jquery.liveurl.js"> </script>
             <script> 
+                var curImages = new Array();
+                
                 $('textarea').liveUrl({
                     loadStart : function(){
                         $('.liveurl-loader').show();
@@ -57,18 +62,26 @@
                         output.find('.url').text(data.url);
                         output.find('.image').empty();
                         
-                        output.find('.close').one('click', function() {
-                            $(this).parent().hide('fast');
-                            $(this).parent().find('.video').html('');
+                        output.find('.close').one('click', function() 
+                        {
+                            var liveUrl     = $(this).parent();
+                            liveUrl.hide('fast');
+                            liveUrl.find('.video').html('').hide();
+                            liveUrl.find('.image').html('');
+                            liveUrl.find('.controls .prev').addClass('inactive');
+                            liveUrl.find('.controls .next').addClass('inactive');
+                            liveUrl.find('.thumbnail').hide();
+                            liveUrl.find('.image').hide();
+
                             $('textarea').trigger('clear'); 
+                            curImages = new Array();
                         });
                         
                         output.show('fast');
                         
-                        if (data.video != null) {
-
-                            var ratioW        = data.video.width  /200;
-                            data.video.width  = 200;
+                        if (data.video != null) {                       
+                            var ratioW        = data.video.width  /350;
+                            data.video.width  = 350;
                             data.video.height = data.video.height / ratioW;
         
                             var video = 
@@ -81,17 +94,80 @@
                                       'allowscriptaccess="always"' +
                                       'width="' + data.video.width  + '" height="' + data.video.height  + '"></embed>' +
                             '</object>';
-                            output.find('.video').html(video);
+                            output.find('.video').html(video).show();
                             
                          
                         }
                     },
                     addImage : function(image)
-                    {
-                        var output = $('.liveurl');
-                        output.find('.image').prepend($(image));
+                    {   
+                        var output  = $('.liveurl');
+                        var jqImage = $(image);
+      
+                        
+                        if (image.width / image.height > 4 
+                        || image.height / image.width  > 4 ) {
+                            // we dont want extra large images...
+                            return false;
+                        } 
+                        
+                        curImages.push(jqImage.attr('src'));
+                        output.find('.image').append(jqImage);
+                        
+                        
+                        if (curImages.length == 1) {
+                            // first image...
+                            
+                            output.find('.thumbnail .current').text('1');
+                            output.find('.thumbnail').show();
+                            output.find('.image').show();
+                            jqImage.addClass('active');
+                            
+                        }
+                        
+                        if (curImages.length == 2) {
+                            output.find('.controls .next').removeClass('inactive');
+                        }
+                        
+                        output.find('.thumbnail .max').text(curImages.length);
                     }
-              });
+                });
+              
+              
+                $('.liveurl ').on('click', '.controls .button', function() 
+                {
+                    var self        = $(this);
+                    var liveUrl     = $(this).parents('.liveurl');
+                    var images      = liveUrl.find('.image');
+                    var activeImage = images.find('img.active');
+                    
+                    if (self.hasClass('next')) 
+                         var elem = activeImage.next("img");
+                    else var elem = activeImage.prev("img");
+      
+                    if (elem.length > 0) {
+                        activeImage.removeClass('active');
+                        elem.addClass('active');  
+                        liveUrl.find('.thumbnail .current').text(elem.index() +1);
+                    }
+
+                    // check next / prev picture
+                    if (self.hasClass('next')) 
+                         var after = elem.next("img");
+                    else var after = elem.prev("img");
+                    
+                    if (after.length > 0) {
+
+                        if (self.hasClass('next')) 
+                               self.prev().removeClass('inactive');
+                        else   self.next().removeClass('inactive');
+                        
+                    } else {
+                        $(this).addClass('inactive');
+                   }
+                   
+                   
+                });
           </script>
     </body>
 </html>

@@ -4,29 +4,20 @@
  * MIT License - You are free to use this commercial projects as long as the copyright header is left intact.
  * @author        Stephan Fischer
  * @copyright     (c) 2012 Stephan Fischer (www.ainetworks.de)
- * @version 0.0.1 (pre-alpha)
+ * @version 1.0.0
  * 
  * UriParser is a function from my addon "Superswitch" for Mozilla FireFox.
  *  
- */
-/*
- * CHECK http://video.golem.de/games/9559/vor-assassins-creed-3-trailer-(was-bisher-geschah).html
  */
 
 (function( $ )
 {
     $.fn.extend(
     { 
-        /*
-         * TODO:
-         *  Multiple Image choose
-         */
-        
         liveUrl : function( options) 
         {
             var defaults = 
             {
-                preview : '',
                 meta: [
                     ['description','name',     'description'],
                     ['description','property', 'og:description'],
@@ -43,7 +34,7 @@
                matchNoData      : true,
                multipleImages   : true,
                defaultProtocol  : 'http://',
-               minWidth         : 32,
+               minWidth         : 100,
                minHeight        : 32,
                success          : function() {},
                loadStart        : function() {},
@@ -163,8 +154,6 @@
                     var duplicate = false;
                     $.each(array, function(key, val)
                     {
-                          console.log(val + "__" + url);
-                          
                         if (val == url) {
                             duplicate = true;
                         } 
@@ -307,24 +296,7 @@
                     core.current.one('clear', function() 
                     {
                        core.init();
-                    });
-                    
-                    /* Show Videos */
-                    /*
-                    if(o.allowVideos) {
-                        if(typeof preview.video != 'undefined') {
-                            console.log(preview);
-                            if (
-                            typeof preview.video_type == 'undefined' ||
-                            preview.video_type        != 'application/x-shockwave-flash' ) return false;
-                            
-                            video = o.video.replace(/{video}/ig, preview.video);
-                            var flashVideo = $(video);
-                            jqPrev.append(flashVideo);
-                        }
-                    }
-                    */
-                          
+                    });     
                 };
                 
                 core.addLoader = function()
@@ -502,9 +474,6 @@
         },
         getLinks : function(text) 
         {
-           // var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?\s|\n\r/gi;
-           // var expression = /(?i)\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
-           
             var expression = /((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)(\s|\n\r)/gi;
             return (text.match(expression));
         },
