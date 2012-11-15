@@ -8,31 +8,37 @@ Include this script **after** the jQuery library
     <script src="/path/to/jquery.liveurl.js"></script>
 
 
-## Usage
+## Quick Usage
 You can use this plugin on every textarea. Start it directly:
 
-<pre>
+```javascript
 $('textarea').liveUrl({
   success : function(data) 
   {  
     console.log(data);
-    // this return the first founded url data:
-
-    /*
-      Object {
-        title: "New Car Quotes, Buy Used Cars, and Prices | The cars.com alternative  | Car.com", 
-        description: "Car Reviews, Car Financing, and a Free non-obligat…e. Buy or finance your next car or truck with us.", 
-        url: "http://www.car.com", 
-        video: null
-      }
-    */
-
+    // this return the first founded url data
   }
 });
-</pre>
+```
+### returns: ###
+```javascript
+Object = {
+    title: "New Car Quotes, Buy Used Cars, and Prices | The cars.com alternative  | Car.com", 
+    description: "Car Reviews, Car Financing, and a Free non-obligat…e.", 
+    url: "http://www.car.com", 
+    video: null
+}
+```
 
+## Options
 
-## Configuration
+| Option | Parameter | Default |  Description |
+| ------------- | ------------- |------------- | ------------- |
+| *findLogo* | `[boolean (true / false)]` | `false` |  should search for an image or class namend "logo" for the image preview |  
+| *matchNoData* | `[boolean (true / false)]` | `true`  |  preview urls, which are not founded (offline, 404) |  
+| *multipleImages* | `[boolean (true / false)]` | `true`  |  preview more than one  image of the url  | 
+| *minWidth* | `[Integer]` | `100`  |  Value in pixel for the minimum width of each preview-image  | 
+| *minHeight* | `[Integer]` | `32`  |  Value in pixel for the minimum height of each preview-image  | 
 
 ## Development
 
