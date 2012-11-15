@@ -23,10 +23,10 @@ Include this script **after** the jQuery library
 ```
 
 ## Browser Compatibility
-Tested in 
  + Google Chrome 23
  + Mozilla Firefox 16.0.2
  * Internet Explorer 9
+ + Safari 5.1.7
  + further soon ;)
 
 ## Quick Usage
