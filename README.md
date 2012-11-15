@@ -3,12 +3,6 @@
 This plugin enables a **live preview** for an url in a *textarea*,
 like the facebook attachment<br/> of a post. Multiple images and a video preview is in this demo integrated.
 
-## Installation
-Include this script **after** the jQuery library
-```html
-  <script src="/path/to/jquery.liveurl.js"></script>
-```
-
 ## Features
  + Filters urls and images from a textarea
  + Multiple Images
@@ -22,6 +16,11 @@ Include this script **after** the jQuery library
 
 [![](http://25.media.tumblr.com/tumblr_mdiyp1bDim1rl9djro1_1280.png)](http://25.media.tumblr.com/tumblr_mdiyp1bDim1rl9djro1_1280.png)
 
+## Installation
+Include this script **after** the jQuery library
+```html
+  <script src="/path/to/jquery.liveurl.js"></script>
+```
 
 ## Quick Usage
 You can use this plugin on every textarea. Start it directly:
