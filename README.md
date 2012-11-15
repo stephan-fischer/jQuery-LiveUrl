@@ -37,8 +37,14 @@ Object = {
 | *findLogo* | `[boolean (true / false)]` | `false` |  should search for an image or class namend "logo" for the image preview |  
 | *matchNoData* | `[boolean (true / false)]` | `true`  |  preview urls, which are not founded (offline, 404) |  
 | *multipleImages* | `[boolean (true / false)]` | `true`  |  preview more than one  image of the url  | 
-| *minWidth* | `[Integer]` | `100`  |  Value in pixel for the minimum width of each preview-image  | 
-| *minHeight* | `[Integer]` | `32`  |  Value in pixel for the minimum height of each preview-image  | 
+| *minWidth* | `[integer]` | `100`  |  Value in pixel for the minimum width of each preview-image  | 
+| *minHeight* | `[integer]` | `32`  |  Value in pixel for the minimum height of each preview-image  | 
+| *loadStart* | `[function()]` | `{}`  | This function starts if the plugin start a page download - for an optional loader | 
+| *loadEnd* | `[function()]` | `{}`  | This function starts if the plugin has finished the page download | 
+| *success* | `[function()]` | `{data}`  | Returns the information about the first founded url | 
+| *addImage* | `[function()]` | `{image}`  | This function is started each time, if a picture is founded | 
+| *imgLoadStart* | `[function()]` | `{}`  | Not implemented | 
+| *imgLoadEnd* | `[function()]` | `{}`  | Not implemented | 
 
 ## Development
 
