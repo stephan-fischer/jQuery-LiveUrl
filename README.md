@@ -7,9 +7,9 @@ like the facebook attachment<br/> of a post. Multiple images and a video preview
  + Filters urls and images from a textarea
  + Multiple Images
  + Video Preview
- + Logo-Image Finder
- + NO PHP required
-
+ + NO PHP required (YQL)
+ + Meta Tag Recognition
+ + Body Images Inspector
 
 ## Demo
 
@@ -21,6 +21,13 @@ Include this script **after** the jQuery library
 ```html
   <script src="/path/to/jquery.liveurl.js"></script>
 ```
+
+## Browser Compatibility
+Tested in 
+ + Google Chrome 23
+ + Mozilla Firefox 16.0.2
+ * Internet Explorer 9
+ + further soon ;)
 
 ## Quick Usage
 You can use this plugin on every textarea. Start it directly:
