@@ -7,6 +7,11 @@ like the facebook attachement<br/> of a post. Multiple images and a video previe
 Include this script **after** the jQuery library
     <script src="/path/to/jquery.liveurl.js"></script>
 
+## Demo
+
+
+[![](http://25.media.tumblr.com/tumblr_mdiyp1bDim1rl9djro1_1280.png)](http://25.media.tumblr.com/tumblr_mdiyp1bDim1rl9djro1_1280.png)
+
 
 ## Quick Usage
 You can use this plugin on every textarea. Start it directly:
