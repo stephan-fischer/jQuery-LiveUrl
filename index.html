@@ -103,7 +103,8 @@
                     {   
                         var output  = $('.liveurl');
                         var jqImage = $(image);
-      
+                        jqImage.attr('alt', 'Preview');
+                        
                         
                         if (image.width / image.height > 4 
                         || image.height / image.width  > 4 ) {

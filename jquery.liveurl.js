@@ -4,7 +4,7 @@
  * MIT License - You are free to use this commercial projects as long as the copyright header is left intact.
  * @author        Stephan Fischer
  * @copyright     (c) 2012 Stephan Fischer (www.ainetworks.de)
- * @version 1.0.0
+ * @version 1.0.1
  * 
  * UriParser is a function from my addon "Superswitch" for Mozilla FireFox.
  *  
@@ -66,15 +66,15 @@
                     };  
                 };
                 
-                core.textUpdate = function() 
+                core.textUpdate = function(self) 
                 {                
                     // read all links   
-                    var links = $.urlHelper.getLinks($(this).val());
+                    var links = $.urlHelper.getLinks($(self).val());
                     core.cleanDuplicates(links);
                     
                     if (links != null) {
                         if (!core.preview) {
-                            core.current = $(this);
+                            core.current = $(self);
                             core.process(links);
                         }
                     }
@@ -86,26 +86,28 @@
                     for (var index in urlArray) {
         
                         var strUrl      = urlArray[index] ;
-                        var strUrl      = strUrl.slice(0,-1);
-                        var pLink       = new $.urlHelper.UriParser(strUrl);
-                       
-                        if (pLink.subdomain.length > 0 || pLink.protocol.length > 0 ) {
-            
-                            if  (pLink.protocol.length == 0) {
-                                strUrl = o.defaultProtocol + strUrl;
-                            }
-            
-                            if (!core.isDuplicate(strUrl, core.already)) {
-                               
-                               if ($.urlHelper.isImage(strUrl)) {
-                                   preview.image = strUrl;
-                                   core.getPreview({}, strUrl);
+                        if (typeof strUrl == 'string') {
+                            var pLink       = new $.urlHelper.UriParser(strUrl);
+
+                            if (pLink.subdomain && pLink.subdomain.length > 0 || 
+                                pLink.protocol  && pLink.protocol.length  > 0 ) {
+                
+                                if  (pLink.protocol.length == 0) {
+                                    strUrl = o.defaultProtocol + strUrl;
+                                }
+                
+                                if (!core.isDuplicate(strUrl, core.already)) {
                                    
-                               } else {
-                                   core.getData(strUrl);  
-                               }
-                               
-                               return true;
+                                   if ($.urlHelper.isImage(strUrl)) {
+                                       preview.image = strUrl;
+                                       core.getPreview({}, strUrl);
+                                       
+                                   } else {
+                                       core.getData(strUrl);  
+                                   }
+                                   
+                                   return true;
+                                }
                             }
                         }
                     } 
@@ -119,8 +121,7 @@
                         var strUrl  = core.already[index];
                           
                         if (!core.isDuplicate(strUrl, links)){
-                            
-                            var index = core.already.indexOf(strUrl);
+                            var index = $.inArray(strUrl, core.already);
                             core.already.splice(index, 1);
                         }
                     }
@@ -132,17 +133,18 @@
                     
                     for(var index in urlArray) {
                         var strUrl  = urlArray[index];
-                        var strUrl  = strUrl.slice(0,-1);
-                        var pLink   = new $.urlHelper.UriParser(strUrl);
-                       
-                        if (pLink.subdomain.length > 0 || 
-                            pLink.protocol.length  > 0 ) {
+                        if (typeof strUrl == 'string') {
+                            var pLink   = new $.urlHelper.UriParser(strUrl);
+                           
+                            if (pLink.subdomain && pLink.subdomain.length > 0 || 
+                                pLink.protocol  && pLink.protocol.length  > 0 ) {
+                                    
+                                if  (pLink.protocol.length == 0) {
+                                    strUrl = o.defaultProtocol + strUrl;
+                                }
                                 
-                            if  (pLink.protocol.length == 0) {
-                                strUrl = o.defaultProtocol + strUrl;
+                                links.push(strUrl);
                             }
-                            
-                            links.push(strUrl);
                         }
                     }
                     
@@ -172,32 +174,42 @@
                     
                     $.yql(query, function() 
                         {
+                            var data = {
+                                query : {results: null}
+                            }
+                            
+                            core.ajaxSuccess(data, url);
                             core.removeLoader();
                             return false;  
                         },
-                        function(data)
-                        {
-                            // URL already loaded, or preview is already shown.
-                            if (core.isDuplicate(url, core.already) || core.preview) {
-                                core.removeLoader();
-                                return false;  
-                            }
-        
-                            if (data.query.results == null) {
-                                core.already.push(url);
-                                core.removeLoader();
-                                if (o.matchNoData) {
-                                    core.getPreview({}, url);
-                                } else {
-                                    return false;  
-                                }
-                                
-                            } else {
-                                core.getPreview(data.query.results, url);
-                            } 
+                        function(data) {
+                            core.ajaxSuccess(data, url)
                         }
                     )
                 }; //getData
+                
+                core.ajaxSuccess = function(data, url)
+                {
+                    // URL already loaded, or preview is already shown.
+                    if (core.isDuplicate(url, core.already) || core.preview) {
+                        core.removeLoader();
+                        return false;  
+                    }
+
+                    if (data.query.results == null) {
+                        core.already.push(url);
+                        core.removeLoader();
+                        if (o.matchNoData) {
+                            core.getPreview({}, url);
+                        } else {
+                            return false;  
+                        }
+                        
+                    } else {
+                        core.getPreview(data.query.results, url);
+                    }   
+                }
+                
                 
                 core.isImage     = function(){
                     return (preview.image.length == 0) ? false : true;  
@@ -272,7 +284,7 @@
                         title       : preview.title,
                         description : preview.description,
                         url         : preview.url,
-                        video       : (typeof preview.video != not && preview.video.length > 0) ? {} : null,
+                        video       : (typeof preview.video != not && preview.video.length > 0) ? {} : null
                     };
                     
                     if (data.video != null) {
@@ -369,7 +381,6 @@
                         
                         core.getImage(image, function(img) 
                         {
-                            
                             if (img.width  >= o.minWidth  && 
                                 img.height >= o.minHeight && core.preview) {
 
@@ -385,11 +396,14 @@
 
                 };
                 
-                core.getImage = function(image, callback)
+                core.getImage = function(src, callback)
                 {
-                    var img     = new Image();
-                    img.addEventListener("load", function() 
+                    var concat  =  $.urlHelper.hasParam(src) ? "&" : "?";
+                    src        +=  concat + 'random=' + (new Date()).getTime();
+                    
+                    $('<img />').attr({'src': src}).load(function() 
                     {
+                        var img = this;
                         var tmrLoaded = window.setInterval(function()
                         {   
                             if (img.width) {
@@ -397,9 +411,7 @@
                                 callback(img);
                             }
                         }, 100);
-                    }, false);
-                    
-                    img.src          = image;
+                    });
                 };
                 
                 core.getValue = function (val,key, tag) {
@@ -414,8 +426,28 @@
                 } ;
                 
                 core.init();
+                var that  = this;
                 var self  = $(this);
-                self.on('keyup change', core.textUpdate);
+                
+                self.on('keyup', function(e) 
+                {
+                    var links = $.urlHelper.getLinks($(self).val());
+                    core.cleanDuplicates(links);
+                    
+                    window.clearInterval(core.textTimer); 
+                    
+                    var code = (e.keyCode ? e.keyCode : e.which);
+                    
+                    if(code == 13 || code == 32) { //Enter keycode
+                        core.textUpdate(that);
+                    } else {
+                        core.textTimer = window.setInterval(function()
+                        {   
+                            core.textUpdate(that);
+                            window.clearInterval(core.textTimer);  
+                        }, 1000);
+                    }
+                }).on('paste', function() {core.textUpdate(that)});
     
             });
         }
@@ -474,7 +506,7 @@
         },
         getLinks : function(text) 
         {
-            var expression = /((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)(\s|\n\r)/gi;
+            var expression = /((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
             return (text.match(expression));
         },
         isImage : function(img, allowed)
@@ -496,6 +528,10 @@
         isPathAbsolute : function(path)
         {
             if (path.substr(0,1) == '/') return true;
+        },
+        hasParam : function(path)
+        {
+             return (path.lastIndexOf('?') == -1 ) ? false : true;
         },
         stripFile : function(path) {
             return path.substr(0, path.lastIndexOf('/') + 1);

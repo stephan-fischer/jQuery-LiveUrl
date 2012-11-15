@@ -63,7 +63,7 @@
 
 .liveurl img {
     width: 100px;
-    float: left;
+    height: auto;
     display: none;
 }
 
