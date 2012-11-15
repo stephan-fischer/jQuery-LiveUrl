@@ -5,7 +5,17 @@ like the facebook attachment<br/> of a post. Multiple images and a video preview
 
 ## Installation
 Include this script **after** the jQuery library
-    <script src="/path/to/jquery.liveurl.js"></script>
+```html
+  <script src="/path/to/jquery.liveurl.js"></script>
+```
+
+## Features
+ + Filters urls and images from a textarea
+ + Multiple Images
+ + Video Preview
+ + Logo-Image Finder
+ + NO PHP required
+
 
 ## Demo
 
