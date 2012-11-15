@@ -68,3 +68,7 @@ Object = {
 ## Authors
 
 [Stephan Fischer](https://github.com/stephan-fischer)
+
+
+## Donation
+If you want to support me, make a small donation  at www.paypal.com: stephan@ainetworks.de
