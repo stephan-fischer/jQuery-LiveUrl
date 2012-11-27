@@ -45,6 +45,7 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" > </script>
             <script src="jquery.liveurl.js"> </script>
             <script> 
+
                 var curImages = new Array();
                 
                 $('textarea').liveUrl({
@@ -105,13 +106,12 @@
                         var jqImage = $(image);
                         jqImage.attr('alt', 'Preview');
                         
-                        
-                        if (image.width / image.height > 4 
-                        || image.height / image.width  > 4 ) {
+                        if ((image.width / image.height)  > 7 
+                        ||  (image.height / image.width)  > 4 ) {
                             // we dont want extra large images...
                             return false;
                         } 
-                        
+
                         curImages.push(jqImage.attr('src'));
                         output.find('.image').append(jqImage);
                         
@@ -139,9 +139,10 @@
                 {
                     var self        = $(this);
                     var liveUrl     = $(this).parents('.liveurl');
-                    var images      = liveUrl.find('.image');
-                    var activeImage = images.find('img.active');
-                    
+                    var content     = liveUrl.find('.image');
+                    var images      = $('img', content);
+                    var activeImage = $('img.active', content);
+
                     if (self.hasClass('next')) 
                          var elem = activeImage.next("img");
                     else var elem = activeImage.prev("img");
@@ -150,22 +151,26 @@
                         activeImage.removeClass('active');
                         elem.addClass('active');  
                         liveUrl.find('.thumbnail .current').text(elem.index() +1);
+                        
+                        if (elem.index() +1 == images.length || elem.index()+1 == 1) {
+                            self.addClass('inactive');
+                        }
                     }
 
-                    // check next / prev picture
                     if (self.hasClass('next')) 
-                         var after = elem.next("img");
-                    else var after = elem.prev("img");
+                         var other = elem.prev("img");
+                    else var other = elem.next("img");
                     
-                    if (after.length > 0) {
-
+                    if (other.length > 0) {
                         if (self.hasClass('next')) 
                                self.prev().removeClass('inactive');
                         else   self.next().removeClass('inactive');
-                        
-                    } else {
-                        $(this).addClass('inactive');
+                   } else {
+                        if (self.hasClass('next')) 
+                               self.prev().addClass('inactive');
+                        else   self.next().addClass('inactive');
                    }
+                   
                    
                    
                 });

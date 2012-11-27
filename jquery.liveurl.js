@@ -4,10 +4,9 @@
  * MIT License - You are free to use this commercial projects as long as the copyright header is left intact.
  * @author        Stephan Fischer
  * @copyright     (c) 2012 Stephan Fischer (www.ainetworks.de)
- * @version 1.0.1
+ * @version 1.2.0
  * 
  * UriParser is a function from my addon "Superswitch" for Mozilla FireFox.
- *  
  */
 
 (function( $ )
@@ -31,11 +30,13 @@
                     ['video_height','property', 'og:video:height']
                ],
                findLogo         : false,
+               findDescription  : true,
                matchNoData      : true,
                multipleImages   : true,
                defaultProtocol  : 'http://',
                minWidth         : 100,
                minHeight        : 32,
+               logoWord         : 'logo',
                success          : function() {},
                loadStart        : function() {},
                loadEnd          : function() {},
@@ -167,7 +168,7 @@
                 core.getData = function (url)
                 {
                   
-                    var xpath  =  '//title|//head/meta|//head|//body';
+                    var xpath  =  '//head|//body';
                     var query  =  'select * from html where url="' + url + '" and compat="html5" and xpath="'+xpath+'"';
 
                     core.addLoader();
@@ -182,7 +183,8 @@
                             core.removeLoader();
                             return false;  
                         },
-                        function(data) {
+                        function(data) 
+                        {
                             core.ajaxSuccess(data, url)
                         }
                     )
@@ -196,83 +198,88 @@
                         return false;  
                     }
 
-                    if (data.query.results == null) {
-                        core.already.push(url);
-                        core.removeLoader();
+
+                    if ($(data).find("results").text().length == 0) {
+
                         if (o.matchNoData) {
-                            core.getPreview({}, url);
-                        } else {
-                            return false;  
+                            core.getPreview(data, url);
+                        }  else {
+                            core.already.push(url);
+                            core.removeLoader();
                         }
                         
                     } else {
-                        core.getPreview(data.query.results, url);
-                    }   
+                        core.getPreview(data, url);
+                    }
                 }
                 
                 
-                core.isImage     = function(){
-                    return (preview.image.length == 0) ? false : true;  
+                core.hasValue     = function(section){
+                    return (preview[section].length == 0) ? false : true;  
                 };
                 
                 core.getPreview = function(data, uri)
                 {
                     core.preview = true; 
                     core.already.push(uri);  
-        
-                    preview.title       = (data.title || uri);
+
+                    var title  = "" ;
+                    
+                    $(data, '<head>').find('title').each(function() 
+                    {
+                        title = $(this).text();
+                    }); 
+                    
+                  
+                    preview.title       = ( title || uri);
                     preview.url         = uri;
                     
-                    if (data.hasOwnProperty('meta')) {
-                        if (typeof data.meta.length == 'undefined') 
-                             core.setMetaData(data.meta);
-                        else  
-                            $.each(data.meta, function(key, val)
-                            {
-                                core.setMetaData(val);
-                            }); 
-                    }
-
-                    // Image fallback
-                    if (!core.isImage()) {
+                    $(data, '<head>').find('meta').each(function() 
+                    {
+                        core.setMetaData($(this));
+                         
+                    });
                     
-                        var images = core.getImages(data.body);
+                    if(o.findDescription && !core.hasValue('description')) {
                         
-                        if (o.findLogo) {
-                            
-                            $.each(images, function(key, val)
-                            {
-                                 if (val.hasOwnProperty('id')) {
-                                    var id   = val.id.toLowerCase();
-                                    var isID = id.indexOf('logo');
-                                    
-                                    if (isID != -1) {
-                                        preview.image = val.src;
-                                        return false;
-                                    }
-                                 }
-                             });
-                        
-                            if (!core.isImage()) {
-                                $.each(images, function(key, val)
-                                 {
-                                    var src   = val.src.toLowerCase();
-                                    var isID = src.indexOf('logo');
-                                    
-                                    if (isID != -1) {
-                                        preview.image = val.src;
-                                        return false;
-                                    
-                                     }
-                                 });
-                             }
-       
-                        }
-                        
-                        if (!core.isImage() && images.length > 0 ) {
-                            for  (var index in images) {
-                                preview.images.push(images[index].src);
+                        $(data, '<body>').find('p').each(function() 
+                        {
+                            var text = $.trim($(this).text());
+                            if(text.length > 3) {
+                                preview.description = text;
+                                return false;
                             }
+                             
+                        });
+                    }
+                    
+                    if (!core.hasValue('image')) {
+                    // meta tag has no images:
+                    
+                        var images = $(data, '<body>').find('img');
+                        
+                        if (o.findLogo ) {
+                           images.each(function() 
+                            {
+                                var self = $(this);
+                                
+                                if (self.attr('src') && self.attr('src').search(o.logoWord, 'i')  != -1 || 
+                                    self.attr('id' ) && self.attr('id' ).search(o.logoWord, 'i')  != -1 ||
+                                    this.className   &&   this.className.search(o.logoWord, 'i')  != -1  
+                                                                ) {
+                                    preview.image = $(this).attr('src');
+                                    return false;
+                                }
+
+                            }); 
+                        }
+
+                        
+                        if (!core.hasValue('image') && images.length > 0 ) {
+                            images.each(function() 
+                            {
+                                preview.images.push($(this).attr('src'));
+                            });
                         } 
                     }
                     
@@ -298,7 +305,7 @@
                     
                     o.success(data);
                     
-                    if (core.isImage()){
+                    if (core.hasValue('image')){
                         preview.images.push(preview.image); 
                         preview.image = '';
                     }
@@ -325,41 +332,19 @@
                 {
                     for (index in o.meta) {
                         var meta = o.meta[index];
-                        preview[meta[0]] = (core.getValue(val,meta[1],meta[2])||preview[meta[0]]);
+                        preview[meta[0]] = (core.getValue(val,meta[1],meta[2])|| preview[meta[0]] );
                     }
                 };
                 
-                core.getImages = function(content)
-                {
-                    var data   = [];
-                    var images = [];
-                    
-                    iterate = function(obj, tag)
-                    {
-                        for(var key in obj) {
-                            var elem = obj[key]; 
-                    
-                            if(key === tag)              data.push(elem);
-                            if(typeof elem === "object") iterate(elem, tag); 
-                        }
+                core.getValue = function (val,key, tag) {
+                    if (val.attr(key)) {
+                        if (val.attr(key).toLowerCase() ==  tag.toLowerCase()) {
+                            if (val.attr('content') && val.attr('content').length > 0) {
+                                return val.attr('content');
+                            }
+                        } 
+                        
                     }
-                    
-                    iterate(content, 'img'); 
-         
-                    if(data.length > 0) {
-                         $.each(data, function(key, val)
-                         {
-                             if (val.hasOwnProperty('src')) {
-                                 if (val.src.length > 0) {
-                                     if ($.urlHelper.isImage(val.src)) {
-                                         images.push(val);
-                                     }
-                                 }
-                             }
-                         });
-                    }
-                    
-                    return images;
                 };
                 
                 core.addImages = function() 
@@ -368,7 +353,6 @@
                     
                     for (var index in preview.images) {
                         var image = preview.images[index];
-                       
                         
                         if (!$.urlHelper.isAbsolute(image)) {
                             var pLink    = new $.urlHelper.UriParser(preview.url);
@@ -413,18 +397,7 @@
                         }, 100);
                     });
                 };
-                
-                core.getValue = function (val,key, tag) {
-                    if (val.hasOwnProperty(key)) {
-                        if (val[key].toLowerCase() ==  tag.toLowerCase()) {
-                            if (val.hasOwnProperty('content') &&val.content.length > 0) {
-                                return val.content;
-                            }
-                        } 
-                        
-                    }
-                } ;
-                
+
                 core.init();
                 var that  = this;
                 var self  = $(this);
@@ -457,18 +430,33 @@
     {
         var yql = {
             path: 'http://query.yahooapis.com/v1/public/yql?q=',
-            query: encodeURIComponent(query),
-            format: '&format=json&callback=?'
+            query: encodeURIComponent(query)
         };
+        
 
-        $.ajax({
-            type    : 'GET',
-            url     : yql['path'] + yql['query'] + yql['format'], 
-            timeout : 8000,  
-            dataType: 'jsonp',
-            error   : error,
-            success : success
-        });
+        if ($.browser.msie && window.XDomainRequest) {
+            var xdr = new XDomainRequest();
+            xdr.open("get", yql['path'] + yql['query']);
+            xdr.onload = function() 
+            {
+                success(xdr.responseText);
+            };
+            
+            xdr.send();
+         
+        } else {
+
+            $.ajax({
+                crossDomain : true,
+                cache: false,
+                type: 'POST',
+                url      : yql['path'] + yql['query'], 
+                timeout  : 8000, 
+                dataType : 'xml',
+                error    : error,
+                success  : success
+            });   
+        }
     };
     
     jQuery.urlHelper =
