@@ -1,4 +1,4 @@
-# jquery.liveurl - a facebook attachment clone
+# jquery.liveurl - a facebook attachment clone (version 1.2.0)
 
 This plugin enables a **live preview** for an url in a *textarea*,
 like the facebook attachment<br/> of a post. Multiple images and a video preview is in this demo integrated.
@@ -10,6 +10,8 @@ like the facebook attachment<br/> of a post. Multiple images and a video preview
  + NO PHP required (YQL)
  + Meta Tag Recognition
  + Body Images Inspector
+ + Body Paragraphs Inspector for Description Fallback
+ 
 
 ## Demo
 
@@ -55,6 +57,8 @@ Object = {
 | Option | Parameter | Default |  Description |
 | ------------- | ------------- |------------- | ------------- |
 | *findLogo* | `[boolean (true / false)]` | `false` |  should search for an image or class namend "logo" for the image preview |  
+| *logoWord* | `[string]` | `logo`  | Word, which should be searched, used for the "findLogo" option  | 
+| *findDescription* | `[boolean (true / false)]` | `true` |  should search for an p tag with text, only if the description is not given |  
 | *matchNoData* | `[boolean (true / false)]` | `true`  |  preview urls, which are not founded (offline, 404) |  
 | *multipleImages* | `[boolean (true / false)]` | `true`  |  preview more than one  image of the url  | 
 | *minWidth* | `[integer]` | `100`  |  Value in pixel for the minimum width of each preview-image  | 
