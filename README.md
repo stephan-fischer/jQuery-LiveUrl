@@ -25,9 +25,8 @@ Include this script **after** the jQuery library
 ## Browser Compatibility
  + Google Chrome 23
  + Mozilla Firefox 16.0.2
- * Internet Explorer 9
+ * Internet Explorer 7, 8 and 9
  + Safari 5.1.7
- + further soon ;)
 
 ## Quick Usage
 You can use this plugin on every textarea. Start it directly:
