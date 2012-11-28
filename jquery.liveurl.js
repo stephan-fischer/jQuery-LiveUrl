@@ -448,8 +448,8 @@
 
             $.ajax({
                 crossDomain : true,
-                cache: false,
-                type: 'POST',
+                cache    : false,
+                type     : 'GET',
                 url      : yql['path'] + yql['query'], 
                 timeout  : 8000, 
                 dataType : 'xml',
