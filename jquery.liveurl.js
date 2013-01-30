@@ -4,7 +4,7 @@
  * MIT License - You are free to use this commercial projects as long as the copyright header is left intact.
  * @author        Stephan Fischer
  * @copyright     (c) 2012 Stephan Fischer (www.ainetworks.de)
- * @version 1.2.0
+ * @version 1.2.1
  * 
  * UriParser is a function from my addon "Superswitch" for Mozilla FireFox.
  */
@@ -433,8 +433,9 @@
             query: encodeURIComponent(query)
         };
         
-
-        if ($.browser.msie && window.XDomainRequest) {
+        var isIE = /msie/.test(navigator.userAgent.toLowerCase());
+        
+        if (isIE && window.XDomainRequest) {
             var xdr = new XDomainRequest();
             xdr.open("get", yql['path'] + yql['query']);
             xdr.onload = function() 

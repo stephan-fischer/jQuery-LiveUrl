@@ -1,4 +1,4 @@
-# jquery.liveurl - a facebook attachment clone (version 1.2.0)
+# jquery.liveurl - a facebook attachment clone (version 1.2.1)
 
 This plugin enables a **live preview** for an url in a *textarea*,
 like the facebook attachment<br/> of a post. Multiple images and a video preview is in this demo integrated.
