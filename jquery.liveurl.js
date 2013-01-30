@@ -4,7 +4,7 @@
  * MIT License - You are free to use this commercial projects as long as the copyright header is left intact.
  * @author        Stephan Fischer
  * @copyright     (c) 2012 Stephan Fischer (www.ainetworks.de)
- * @version 1.2.1
+ * @version 1.2.2
  * 
  * UriParser is a function from my addon "Superswitch" for Mozilla FireFox.
  */
