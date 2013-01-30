@@ -38,7 +38,7 @@ $('textarea').liveUrl({
   success : function(data) 
   {  
     console.log(data);
-    // this return the first founded url data
+    // this return the first found url data
   }
 });
 ```
@@ -59,14 +59,14 @@ Object = {
 | *findLogo* | `[boolean (true / false)]` | `false` |  should search for an image or class namend "logo" for the image preview |  
 | *logoWord* | `[string]` | `logo`  | Word, which should be searched, used for the "findLogo" option  | 
 | *findDescription* | `[boolean (true / false)]` | `true` |  should search for an p tag with text, only if the description is not given |  
-| *matchNoData* | `[boolean (true / false)]` | `true`  |  preview urls, which are not founded (offline, 404) |  
+| *matchNoData* | `[boolean (true / false)]` | `true`  |  preview urls, which are not found (offline, 404) |  
 | *multipleImages* | `[boolean (true / false)]` | `true`  |  preview more than one  image of the url  | 
 | *minWidth* | `[integer]` | `100`  |  Value in pixel for the minimum width of each preview-image  | 
 | *minHeight* | `[integer]` | `32`  |  Value in pixel for the minimum height of each preview-image  | 
 | *loadStart* | `[function()]` | `{}`  | This function starts if the plugin start a page download - for an optional loader | 
 | *loadEnd* | `[function()]` | `{}`  | This function starts if the plugin has finished the page download | 
-| *success* | `[function()]` | `{data}`  | Returns the information about the first founded url | 
-| *addImage* | `[function()]` | `{image}`  | This function is started each time, if a picture is founded | 
+| *success* | `[function()]` | `{data}`  | Returns the information about the first found url | 
+| *addImage* | `[function()]` | `{image}`  | This function is started each time, if a picture is found | 
 | *imgLoadStart* | `[function()]` | `{}`  | Not implemented | 
 | *imgLoadEnd* | `[function()]` | `{}`  | Not implemented | 
 
