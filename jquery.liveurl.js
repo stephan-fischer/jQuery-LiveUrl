@@ -46,7 +46,6 @@
        this.each(function() {
          var o       = options,
          core    = {already : []},
-         url     = {},
          preview = {};
 
          core.init = function () {
