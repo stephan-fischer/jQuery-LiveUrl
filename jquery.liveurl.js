@@ -12,8 +12,7 @@
 (function( $ ) {
 
   var initComponent = function(options) {
-    var o = options,
-    preview = {};
+    var o = options;
 
     return {
       already: [],
