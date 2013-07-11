@@ -41,7 +41,7 @@
          addImage         : function() {}
        }
 
-       var options =  $.extend(defaults, options);
+       var options =  $.extend({}, defaults, options);
 
        this.each(function() {
          var o       = options,
