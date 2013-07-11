@@ -10,51 +10,59 @@
   </head>
 
   <body>
-    <textarea style="width: 300px; height: 100px;" placeholder="write here"></textarea>
-    <div class="liveurl-loader"></div>
-    <div class="liveurl">
-      <div class="close" title="Entfernen"></div>
-      <div class="inner">
-        <div class="image"> </div>
-        <div class="details">
-          <div class="info">
-            <div class="title"> </div>
-            <div class="description"> </div> 
-            <div class="url"> </div>
-          </div>
+    <div>
+      <textarea style="width: 300px; height: 100px;" placeholder="write here"></textarea>
+    </div>
+    <div>
+      <button id="post">Post</button>
+    </div>
+    <div id="new_post">
+      <div class="liveurl-loader"></div>
+      <div class="liveurl">
+        <div class="close" title="Entfernen"></div>
+        <div class="inner">
+          <div class="image"> </div>
+          <div class="details">
+            <div class="info">
+              <div class="title"> </div>
+              <div class="description"> </div> 
+              <div class="url"> </div>
+            </div>
 
-          <div class="thumbnail">
-            <div class="pictures">
-              <div class="controls">
-                <div class="prev button inactive"></div>
-                <div class="next button inactive"></div>
-                <div class="count">
-                  <span class="current">0</span><span> von </span><span class="max">0</span>
+            <div class="thumbnail">
+              <div class="pictures">
+                <div class="controls">
+                  <div class="prev button inactive"></div>
+                  <div class="next button inactive"></div>
+                  <div class="count">
+                    <span class="current">0</span><span> von </span><span class="max">0</span>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="video"></div>
           </div>
-          <div class="video"></div>
-        </div>
 
+        </div>
       </div>
     </div>
+    <div id="posts"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" > </script>
     <script src="jquery.liveurl.js"> </script>
     <script>
 
-      var curImages = new Array();
-
-      $('textarea').liveUrl({
+      var options = {
+        curImages: new Array(),
         loadStart : function(){
-          $('.liveurl-loader').show();
+          this.container.find('.liveurl-loader').show();
         },
         loadEnd : function(){
-          $('.liveurl-loader').hide();
+          this.container.find('.liveurl-loader').hide();
         },
         success : function(data) {
-          var output = $('.liveurl');
+          var that = this;
+          var output = this.container.find('.liveurl');
           output.find('.title').text(data.title);
           output.find('.description').text(data.description);
           output.find('.url').text(data.url);
@@ -70,7 +78,7 @@
             liveUrl.find('.image').hide();
 
             $('textarea').trigger('clear');
-            curImages = new Array();
+            that.curImages = new Array();
           });
           output.show('fast');
           if (data.video != null) {
@@ -91,7 +99,7 @@
           }
         },
         addImage : function(image) {
-          var output  = $('.liveurl');
+          var output  = this.container.find('.liveurl');
           var jqImage = $(image);
           jqImage.attr('alt', 'Preview');
           if ((image.width / image.height)  > 7
@@ -100,20 +108,36 @@
                 return false;
               }
 
-              curImages.push(jqImage.attr('src'));
+              this.curImages.push(jqImage.attr('src'));
               output.find('.image').append(jqImage);
-              if (curImages.length == 1) {
+              if (this.curImages.length == 1) {
                 // first image
                 output.find('.thumbnail .current').text('1');
                 output.find('.thumbnail').show();
                 output.find('.image').show();
                 jqImage.addClass('active');
               }
-              if (curImages.length == 2) {
+              if (this.curImages.length == 2) {
                 output.find('.controls .next').removeClass('inactive');
               }
-              output.find('.thumbnail .max').text(curImages.length);
+              output.find('.thumbnail .max').text(this.curImages.length);
         }
+      };
+
+      //Listen on the text area for a link and show the preview
+      var withOptions = $.extend({}, {container: $('#new_post')}, options);
+      $('textarea').liveUrl(withOptions);
+
+      //Create a new post and show the preview on it
+      $('#post').on('click', function() {
+        var newPost = $('#post_template .post').clone();
+        newPost.find('.body').text($('textarea').val());
+        $('#posts').prepend(newPost);
+
+        var withOptions = $.extend({}, {container: newPost}, options);
+        $('textarea').processUrl(withOptions);
+        $('textarea').val('');
+        $('#new_post .close').trigger('click');
       });
 
       $('.liveurl ').on('click', '.controls .button', function() {
@@ -150,5 +174,37 @@
       });
 
     </script>
+    <div id="post_template" style="display:none">
+      <div class="post">
+        <div class="body"></div>
+        <div class="liveurl-loader"></div>
+        <div class="liveurl">
+          <div class="inner">
+            <div class="image"> </div>
+            <div class="details">
+              <div class="info">
+                <div class="title"> </div>
+                <div class="description"> </div> 
+                <div class="url"> </div>
+              </div>
+
+              <div class="thumbnail">
+                <div class="pictures">
+                  <div class="controls">
+                    <div class="prev button inactive"></div>
+                    <div class="next button inactive"></div>
+                    <div class="count">
+                      <span class="current">0</span><span> von </span><span class="max">0</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="video"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

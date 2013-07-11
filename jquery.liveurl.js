@@ -291,37 +291,37 @@
     }
   };
 
-  $.fn.extend({
-    liveUrl : function( options) {
-      var defaults = {
-        meta: [
-          ['description','name',     'description'],
-          ['description','property', 'og:description'],
-          ['description','property', 'pinterestapp:about'],
-          ['image','property', 'og:image'],
-          ['image','itemprop', 'image'],
-          ['title','property', 'og:title'],
-          ['video','property', 'og:video'],
-          ['video_type','property', 'og:video:type'],
-          ['video_width','property', 'og:video:width'],
-          ['video_height','property', 'og:video:height']
-        ],
-        findLogo         : false,
-        findDescription  : true,
-        matchNoData      : true,
-        multipleImages   : true,
-        defaultProtocol  : 'http://',
-        minWidth         : 100,
-        minHeight        : 32,
-        logoWord         : 'logo',
-        success          : function() {},
-        loadStart        : function() {},
-        loadEnd          : function() {},
-        imgLoadStart     : function() {},
-        imgLoadEnd       : function() {},
-        addImage         : function() {}
-      }
+  var defaults = {
+    meta: [
+      ['description','name',     'description'],
+      ['description','property', 'og:description'],
+      ['description','property', 'pinterestapp:about'],
+      ['image','property', 'og:image'],
+      ['image','itemprop', 'image'],
+      ['title','property', 'og:title'],
+      ['video','property', 'og:video'],
+      ['video_type','property', 'og:video:type'],
+      ['video_width','property', 'og:video:width'],
+      ['video_height','property', 'og:video:height']
+    ],
+    findLogo         : false,
+    findDescription  : true,
+    matchNoData      : true,
+    multipleImages   : true,
+    defaultProtocol  : 'http://',
+    minWidth         : 100,
+    minHeight        : 32,
+    logoWord         : 'logo',
+    success          : function() {},
+    loadStart        : function() {},
+    loadEnd          : function() {},
+    imgLoadStart     : function() {},
+    imgLoadEnd       : function() {},
+    addImage         : function() {}
+  }
 
+  $.fn.extend({
+    liveUrl : function(options) {
       var options =  $.extend({}, defaults, options);
 
       this.each(function() {
@@ -332,7 +332,7 @@
         var self  = $(this);
 
         self.on('keyup', function(e) {
-          var links = $.urlHelper.getLinks($(self).val());
+          var links = $.urlHelper.getLinks(self.val());
           core.cleanDuplicates(links);
           window.clearInterval(core.textTimer);
           var code = (e.keyCode ? e.keyCode : e.which);
@@ -345,6 +345,26 @@
             }, 1000);
           }
         }).on('paste', function() {core.textUpdate(that)});
+      });
+    },
+    processUrl : function(options) {
+      var options =  $.extend({}, defaults, options);
+
+      this.each(function() {
+        var core = initComponent(options);
+
+        core.init();
+        var that  = this;
+        var self  = $(this);
+
+        var text = self.val() || self.text();
+        var links = $.urlHelper.getLinks(text);
+        window.clearInterval(core.textTimer);
+
+        if (links != null && !core.preview) {
+          core.current = $(self);
+          core.process(links);
+        }
       });
     }
   });
