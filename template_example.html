@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="author" content="Stephan Fischer" />
+    <title>Live Url</title>
+    <link rel="stylesheet" href="liveurl.css" />
+  </head>
+
+  <body>
+    <div>
+      <textarea style="width: 300px; height: 100px;" placeholder="write here"></textarea>
+    </div>
+    <div>
+      <button id="post">Post</button>
+    </div>
+    <div id="liveurl"></div>
+    <div id="posts"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" > </script>
+    <script src="jquery.liveurl.js"> </script>
+    <script>
+
+      var options = {
+        template: 
+        '<div class="liveurl-loader"></div>' +
+        '<div class="liveurl">' +
+          '<div class="close" title="Entfernen"></div>' +
+          '<div class="inner">' +
+            '<div class="image"> </div>' +
+            '<div class="details">' +
+              '<div class="info">' +
+                '<div class="title"> </div>' +
+                '<div class="description"> </div> ' +
+                '<div class="url"> </div>' +
+              '</div>' +
+              '<div class="thumbnail">' +
+                '<div class="pictures">' +
+                  '<div class="controls">' +
+                    '<div class="prev button inactive"></div>' +
+                    '<div class="next button inactive"></div>' +
+                    '<div class="count">' +
+                      '<span class="current">0</span><span> von </span><span class="max">0</span>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="video"></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      };
+
+      //Listen on the text area for keyup or paste and show the preview for that link
+      $('textarea').liveUrl($.extend({}, {container: $('#liveurl')}, options));
+
+      //Create a new post and show the preview on it
+      $('#post').on('click', function() {
+        var newPost = createPost();
+
+        //Create the preview on the given container for the given 'postContent' text
+        $('textarea').processUrl($.extend({}, {container: newPost}, options));
+        $('textarea').val('');
+
+        //Close the prevew section for the textarea
+        $('#liveurl .close').trigger('click');
+      });
+
+
+      $('.liveurl ').on('click', '.controls .button', function() {
+        var self        = $(this);
+        var liveUrl     = $(this).parents('.liveurl');
+        var content     = liveUrl.find('.image');
+        var images      = $('img', content);
+        var activeImage = $('img.active', content);
+
+        if (self.hasClass('next'))
+          var elem = activeImage.next("img");
+        else var elem = activeImage.prev("img");
+        if (elem.length > 0) {
+          activeImage.removeClass('active');
+          elem.addClass('active');
+          liveUrl.find('.thumbnail .current').text(elem.index() +1);
+          if (elem.index() +1 == images.length || elem.index()+1 == 1) {
+            self.addClass('inactive');
+          }
+        }
+
+        if (self.hasClass('next')) 
+          var other = elem.prev("img");
+        else var other = elem.next("img");
+        if (other.length > 0) {
+          if (self.hasClass('next'))
+            self.prev().removeClass('inactive');
+          else   self.next().removeClass('inactive');
+        } else {
+          if (self.hasClass('next'))
+            self.prev().addClass('inactive');
+          else   self.next().addClass('inactive');
+        }
+      });
+
+      var createPost = function() {
+        var newPost = $('#post_template .post').clone();
+        newPost.find('.content').text($('textarea').val());
+        $('#posts').prepend(newPost);
+        return newPost.find('.preview');
+      };
+
+    </script>
+    <div id="post_template" style="display:none">
+      <div class="post">
+        <div class="content"></div>
+        <div class="preview"></div>
+      </div>
+    </div>
+  </body>
+</html>
