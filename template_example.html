@@ -54,14 +54,14 @@
       };
 
       //Listen on the text area for keyup or paste and show the preview for that link
-      $('textarea').liveUrl($.extend({}, {container: $('#liveurl')}, options));
+      $('textarea').liveUrl($.extend({}, {target: $('#liveurl')}, options));
 
       //Create a new post and show the preview on it
       $('#post').on('click', function() {
         var newPost = createPost();
 
-        //Create the preview on the given container for the given 'postContent' text
-        $('textarea').processUrl($.extend({}, {container: newPost}, options));
+        //Create the preview on the given target for the given 'postContent' text
+        $('textarea').processUrl($.extend({}, {target: newPost}, options));
         $('textarea').val('');
 
         //Close the prevew section for the textarea

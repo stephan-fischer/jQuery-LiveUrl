@@ -55,14 +55,14 @@
       var options = {
         curImages: new Array(),
         loadStart : function(){
-          this.container.find('.liveurl-loader').show();
+          this.target.find('.liveurl-loader').show();
         },
         loadEnd : function(){
-          this.container.find('.liveurl-loader').hide();
+          this.target.find('.liveurl-loader').hide();
         },
         success : function(data) {
           var that = this;
-          var output = this.container.find('.liveurl');
+          var output = this.target.find('.liveurl');
           output.find('.title').text(data.title);
           output.find('.description').text(data.description);
           output.find('.url').text(data.url);
@@ -99,7 +99,7 @@
           }
         },
         addImage : function(image) {
-          var output  = this.container.find('.liveurl');
+          var output  = this.target.find('.liveurl');
           var jqImage = $(image);
           jqImage.attr('alt', 'Preview');
           if ((image.width / image.height)  > 7
@@ -125,7 +125,7 @@
       };
 
       //Listen on the text area for a link and show the preview
-      var withOptions = $.extend({}, {container: $('#new_post')}, options);
+      var withOptions = $.extend({}, {target: $('#new_post')}, options);
       $('textarea').liveUrl(withOptions);
 
       //Create a new post and show the preview on it
@@ -134,7 +134,7 @@
         newPost.find('.body').text($('textarea').val());
         $('#posts').prepend(newPost);
 
-        var withOptions = $.extend({}, {container: newPost}, options);
+        var withOptions = $.extend({}, {target: newPost}, options);
         $('textarea').processUrl(withOptions);
         $('textarea').val('');
         $('#new_post .close').trigger('click');

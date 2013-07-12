@@ -15,7 +15,7 @@
     var o = options;
 
     if(typeof o.template === 'string') {
-      o.container.html(o.template);
+      o.target.html(o.template);
     }
 
     return {
@@ -297,13 +297,13 @@
   var defaults = {
     curImages : new Array(),
     loadStart : function() {
-      this.container.find('.liveurl-loader').show();
+      this.target.find('.liveurl-loader').show();
     },
     loadEnd : function() {
-      this.container.find('.liveurl-loader').hide();
+      this.target.find('.liveurl-loader').hide();
     },
     success: function(data) {
-      var output = this.container.find('.liveurl');
+      var output = this.target.find('.liveurl');
 
       output.find('.title').text(data.title);
       output.find('.description').text(data.description);
@@ -345,7 +345,7 @@
       }
     },
     addImage: function(image) {
-      var output  = this.container.find('.liveurl');
+      var output  = this.target.find('.liveurl');
       var jqImage = $(image);
       jqImage.attr('alt', 'Preview');
 
