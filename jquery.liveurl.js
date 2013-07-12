@@ -11,9 +11,12 @@
 
 (function( $ ) {
 
-  var initComponent = function(options) {
-    var o = options;
+  var initComponent = function(opts) {
+    var o = opts;
+    var preview = {};
 
+    //constructor
+    o.curImages = new Array();
     if(typeof o.template === 'string') {
       o.target.html(o.template);
     }
@@ -295,7 +298,6 @@
   };
 
   var defaults = {
-    curImages : new Array(),
     loadStart : function() {
       this.target.find('.liveurl-loader').show();
     },
@@ -319,8 +321,6 @@
         liveUrl.find('.controls .next').addClass('inactive');
         liveUrl.find('.thumbnail').hide();
         liveUrl.find('.image').hide();
-
-        $('textarea').trigger('clear'); 
         this.curImages = new Array();
       });
 
@@ -398,10 +398,10 @@
 
   $.fn.extend({
     liveUrl : function(options) {
-      var options =  $.extend({}, defaults, options);
+      var withOptions =  $.extend({}, defaults, options);
 
       this.each(function() {
-        var core = initComponent(options);
+        var core = initComponent(withOptions);
 
         core.init();
         var that  = this;
@@ -424,10 +424,10 @@
       });
     },
     processUrl : function(options) {
-      var options =  $.extend({}, defaults, options);
+      var withOptions =  $.extend({}, defaults, options);
 
       this.each(function() {
-        var core = initComponent(options);
+        var core = initComponent(withOptions);
 
         core.init();
         var that  = this;
