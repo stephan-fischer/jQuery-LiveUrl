@@ -204,10 +204,24 @@
         }
         this.removeLoader();
         // prepare output
+        var data  = this.buildData();
+
+        o.success(data);
+        if (this.hasValue('image')) {
+          preview.images.push(preview.image);
+          preview.image = '';
+        }
+        this.addImages();
+        this.current.one('clear', function() {
+          that.init();
+        });
+      },
+
+      buildData: function() {
         var not   = 'undefined';
         var data  = {
-          title       : preview.title,
-          description : preview.description,
+          title       : o.encodingSafe ? $.htmlDecode(preview.title) : preview.title,
+          description : o.encodingSafe ? $.htmlDecode(preview.description) : preview.description,
           url         : preview.url,
           video       : (typeof preview.video != not && preview.video.length > 0) ? {} : null
         };
@@ -219,15 +233,7 @@
             height: (typeof preview.video_height != not) ? preview.video_height :''
           }
         }
-        o.success(data);
-        if (this.hasValue('image')) {
-          preview.images.push(preview.image);
-          preview.image = '';
-        }
-        this.addImages();
-        this.current.one('clear', function() {
-          that.init();
-        });
+        return data;
       },
 
       addLoader: function() {
@@ -392,6 +398,7 @@
     minWidth         : 100,
     minHeight        : 32,
     logoWord         : 'logo',
+    encodingSafe     : false,
     imgLoadStart     : function() {},
     imgLoadEnd       : function() {}
   }
@@ -471,6 +478,10 @@
         success  : success
       });
     }
+  };
+
+  jQuery.htmlDecode = function (value) {
+    return $('<div/>').html(value).text();
   };
 
   jQuery.urlHelper = {
