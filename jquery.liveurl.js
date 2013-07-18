@@ -212,7 +212,7 @@
           preview.image = '';
         }
         this.addImages();
-        this.current.one('clear', function() {
+        o.target.one('clear', function() {
           that.init();
         });
       },
@@ -311,6 +311,7 @@
       this.target.find('.liveurl-loader').hide();
     },
     success: function(data) {
+      var that = this;
       var output = this.target.find('.liveurl');
 
       output.find('.title').text(data.title);
@@ -327,7 +328,8 @@
         liveUrl.find('.controls .next').addClass('inactive');
         liveUrl.find('.thumbnail').hide();
         liveUrl.find('.image').hide();
-        this.curImages = new Array();
+        that.target.trigger('clear');
+        that.curImages = new Array();
       });
 
       output.show('fast');
