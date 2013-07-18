@@ -33,6 +33,8 @@
           title: '' ,
           description: ''
         };
+        o.curImages = new Array();
+        o.clean();
       },
 
       textUpdate: function(self) {
@@ -212,7 +214,7 @@
           preview.image = '';
         }
         this.addImages();
-        this.current.one('clear', function() {
+        o.target.one('liveurl:clear', function() {
           that.init();
         });
       },
@@ -264,6 +266,7 @@
       addImages: function() {
         var that = this;
         var images = [];
+
         for (var index in preview.images) {
           var image = preview.images[index];
           if (!$.urlHelper.isAbsolute(image)) {
@@ -274,6 +277,7 @@
               image = host + image;
             else image = host + $.urlHelper.stripFile(pLink.path) + '/' + image;
           }
+
 
           this.getImage(image, function(img) {
             if (img.width  >= o.minWidth  &&
@@ -310,7 +314,18 @@
     loadEnd : function() {
       this.target.find('.liveurl-loader').hide();
     },
+    clean: function() {
+      var liveUrl = this.target.find('.liveurl');
+      liveUrl.hide('fast');
+      liveUrl.find('.video').html('').hide();
+      liveUrl.find('.image').html('');
+      liveUrl.find('.controls .prev').addClass('inactive');
+      liveUrl.find('.controls .next').addClass('inactive');
+      liveUrl.find('.thumbnail').hide();
+      liveUrl.find('.image').hide();
+    },
     success: function(data) {
+      var that = this;
       var output = this.target.find('.liveurl');
 
       output.find('.title').text(data.title);
@@ -319,15 +334,7 @@
       output.find('.image').empty();
 
       output.find('.close').one('click', function() {
-        var liveUrl = $(this).parent();
-        liveUrl.hide('fast');
-        liveUrl.find('.video').html('').hide();
-        liveUrl.find('.image').html('');
-        liveUrl.find('.controls .prev').addClass('inactive');
-        liveUrl.find('.controls .next').addClass('inactive');
-        liveUrl.find('.thumbnail').hide();
-        liveUrl.find('.image').hide();
-        this.curImages = new Array();
+        that.target.trigger('liveurl:clear');
       });
 
       output.show('fast');
