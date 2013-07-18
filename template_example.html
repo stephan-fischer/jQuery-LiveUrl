@@ -16,15 +16,43 @@
     <div>
       <button id="post">Post</button>
     </div>
-    <div id="liveurl"></div>
+    <div id="liveurl">
+      <div class="liveurl-loader"></div>
+      <div class="liveurl">
+        <div class="close" title="Entfernen"></div>
+        <div class="inner">
+          <div class="image"> </div>
+          <div class="details">
+            <div class="info">
+              <div class="title"> </div>
+              <div class="description"> </div> 
+              <div class="url"> </div>
+            </div>
+
+            <div class="thumbnail">
+              <div class="pictures">
+                <div class="controls">
+                  <div class="prev button inactive"></div>
+                  <div class="next button inactive"></div>
+                  <div class="count">
+                    <span class="current">0</span><span> von </span><span class="max">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="video"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
     <div id="posts"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" > </script>
     <script src="jquery.liveurl.js"> </script>
     <script>
 
-      var options = {
-        template: 
+      var template =
         '<div class="liveurl-loader"></div>' +
         '<div class="liveurl">' +
           '<div class="close" title="Entfernen"></div>' +
@@ -50,18 +78,23 @@
               '<div class="video"></div>' +
             '</div>' +
           '</div>' +
-        '</div>'
-      };
+        '</div>';
 
-      //Listen on the text area for keyup or paste and show the preview for that link
-      $('textarea').liveUrl($.extend({}, {target: $('#liveurl')}, options));
+      //Listen on the text area for 'onkeyup' or 'onpaste' events and show the preview for that link
+      $('textarea').liveUrl({
+        target: $('#liveurl')
+      });
 
       //Create a new post and show the preview on it
       $('#post').on('click', function() {
         var newPost = createPost();
 
-        //Create the preview on the given target for the given 'postContent' text
-        $('textarea').processUrl($.extend({}, {target: newPost}, options));
+        //Create the preview on 'target' based on 'template'
+        $('textarea').processUrl({
+          target: newPost,
+          template: template
+        });
+
         $('textarea').val('');
 
         //Close the prevew section for the textarea
