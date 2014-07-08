@@ -58,6 +58,7 @@
                 core.init = function () 
                 {
                     core.preview = false;
+                    core.processedImg = 0;
                     preview      = {
                         url : '',
                         images: [],
@@ -390,9 +391,13 @@
                         var img = this;
                         var tmrLoaded = window.setInterval(function()
                         {   
+                            core.processedImg++;
                             if (img.width) {
                                 window.clearInterval(tmrLoaded);  
                                 callback(img);
+                            }
+                            if(core.processedImg == preview.images.length){
+                                o.imgLoadEnd();
                             }
                         }, 100);
                     });
