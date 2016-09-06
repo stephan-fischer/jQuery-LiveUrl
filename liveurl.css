@@ -64,7 +64,7 @@
 .liveurl img {
     width: 100px;
     height: auto;
-    display: none;
+    /*display: none;*/
 }
 
 .liveurl img.active {
