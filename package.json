@@ -1,0 +1,16 @@
+{
+  "name": "jQuery LiveUrl",
+  "description": "jquery.liveurl - a facebook attachment clone",
+  "license": "MIT",
+  "version": "1.2.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DivvyHQ/jQuery-LiveUrl"
+  },
+  "scripts": {
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
