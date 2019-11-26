@@ -42,6 +42,7 @@
                loadEnd          : function() {},
                imgLoadStart     : function() {},
                imgLoadEnd       : function() {},
+               clear               : function() {},
                addImage         : function() {}
             }
 
@@ -68,17 +69,35 @@
                     };  
                 };
                 
+                core.clear = function()
+                {
+                    o.clear();
+                }
+                
+                core.reinit = function()
+                {
+                    core.clear();
+                    core.init();
+                }
+                
                 core.textUpdate = function(self) 
                 {                
                     // read all links   
                     var links = $.urlHelper.getLinks($(self).val());
                     core.cleanDuplicates(links);
-                    
+                                        
                     if (links != null) {
+                        
+                        if ( links.indexOf( preview.url ) == -1 )
+                            core.reinit();
+                            
                         if (!core.preview) {
                             core.current = $(self);
                             core.process(links);
                         }
+                    } else{
+                        if (core.preview)
+                            core.reinit();
                     }
                 };
                 

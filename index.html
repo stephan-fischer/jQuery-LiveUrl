@@ -54,6 +54,10 @@
                     loadEnd : function(){
                         $('.liveurl-loader').hide();
                     },
+					clear: function()
+					{
+						$('.liveurl').hide();
+					},
                     success : function(data) 
                     {                        
                         var output = $('.liveurl');
