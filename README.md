@@ -81,4 +81,4 @@ Object = {
 
 
 ## Donation
-If you want to support me, make a small donation  at www.paypal.com: stephan@ainetworks.de
+If you want to support me, make a small donation  at www.paypal.com: stephan@mrfischer.de
